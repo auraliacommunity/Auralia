@@ -412,15 +412,15 @@ const initialProducts = [
 
     { id: "prod-005", name: "Rosa Bella", description: "Una fragancia floral que captura la esencia de un jardín en plena floración.", category: "candle", image: "img/candle/rosa bella.jpg", prices: { small: 94.99, medium: 179.99, large: 289.99 }, scent: "Pétalos de rosa", ingredients: ["Cera de soya", "Aceite de rosa", "Pétalos naturales"], stock: { small: 40, medium: 25, large: 15 }, featured: true },
 
-    { id: "prod-006", name: "Jabon de Avena", description: "Un jabón suave y exfoliante con avena natural.", category: "soap", image: "img/soap/avena.jpg", prices: { small: 12.99, medium: 18.99, large: 26.99 }, scent: "Avena cremosa", ingredients: ["Avena molida", "Manteca de karité", "Aceite de coco"], stock: { small: 35, medium: 20, large: 10 }, featured: false },
+    { id: "prod-006", name: "Jabon de Avena", description: "Un jabón suave y exfoliante con avena natural.", category: "soap", image: "img/soap/avena.jpg", price: 99.99, scent: "Avena cremosa", ingredients: ["Avena molida", "Manteca de karité", "Aceite de coco"], stock: 35, featured: false },
 
-    { id: "prod-007", name: "Jabon de Cítricos", description: "Un jabón refrescante con fragancia a cítricos.", category: "soap", image: "img/soap/citricos.jpg", prices: { small: 11.99, medium: 17.99, large: 24.99 }, scent: "Limón + naranja", ingredients: ["Aceite de limón", "Aceite de naranja", "Glicerina vegetal"], stock: { small: 45, medium: 30, large: 15 }, featured: false },
+    { id: "prod-007", name: "Jabon de Cítricos", description: "Un jabón refrescante con fragancia a cítricos.", category: "soap", image: "img/soap/citricos.jpg", price: 99.99, scent: "Limón + naranja", ingredients: ["Aceite de limón", "Aceite de naranja", "Glicerina vegetal"], stock: 45, featured: false },
 
-    { id: "prod-008", name: "Jabon de Petalos de Rosa", description: "Un jabón delicado con extracto de pétalos de rosa.", category: "soap", image: "img/soap/petalos de rosa.jpg", prices: { small: 12.99, medium: 18.99, large: 26.99 }, scent: "Rosa suave", ingredients: ["Extracto de pétalos de rosa", "Aceite de almendra", "Manteca de karité"], stock: { small: 35, medium: 20, large: 10 }, featured: true },
+    { id: "prod-008", name: "Jabon de Petalos de Rosa", description: "Un jabón delicado con extracto de pétalos de rosa.", category: "soap", image: "img/soap/petalos de rosa.jpg", price: 99.99, scent: "Rosa suave", ingredients: ["Extracto de pétalos de rosa", "Aceite de almendra", "Manteca de karité"], stock: 35, featured: true },
 
-    { id: "prod-009", name: "Jabon de Savia", description: "Un jabón purificante con extracto de savia.", category: "soap", image: "img/soap/savia.jpg", prices: { small: 11.99, medium: 17.99, large: 24.99 }, scent: "Hierbas frescas", ingredients: ["Aceite de eucalipto", "Romero", "Aceite de coco"], stock: { small: 45, medium: 30, large: 15 }, featured: true },
+    { id: "prod-009", name: "Jabon de Savia", description: "Un jabón purificante con extracto de savia.", category: "soap", image: "img/soap/savia.jpg", price: 99.99, scent: "Hierbas frescas", ingredients: ["Aceite de eucalipto", "Romero", "Aceite de coco"], stock: 45, featured: true },
 
-    { id: "prod-010", name: "Jabon de Miel", description: "Un jabón nutritivo con miel natural.", category: "soap", image: "img/soap/miel.jpg", prices: { small: 13.99, medium: 19.99, large: 28.99 }, scent: "Miel dulce", ingredients: ["Miel natural", "Aceite de oliva", "Glicerina vegetal"], stock: { small: 30, medium: 20, large: 12 }, featured: true },
+    { id: "prod-010", name: "Jabon de Miel", description: "Un jabón nutritivo con miel natural.", category: "soap", image: "img/soap/miel.jpg", price: 99.99, scent: "Miel dulce", ingredients: ["Miel natural", "Aceite de oliva", "Glicerina vegetal"], stock: 30, featured: true },
 ];
 
 const customizerOptions = {
@@ -431,7 +431,7 @@ const customizerOptions = {
     sizes: [ { id: "small", label: "Pequeño", weight: "50g", price: 8.99 }, { id: "medium", label: "Mediano", weight: "100g", price: 12.99 }, { id: "large", label: "Grande", weight: "150g", price: 18.99 } ]
 };
 
-const sizeLabels = { small: "Pequeño", medium: "Mediano", large: "Grande" };
+const sizeLabels = { small: "Pequeño", medium: "Mediano", large: "Grande", unico: "Tamaño único" };
 
 // State
 let currentPage = 'home';
@@ -701,8 +701,9 @@ function renderHome() {
 }
 
 function renderProductCard(p) {
-
-    const minPrice = Math.min(p.prices.small, p.prices.medium, p.prices.large);
+    // Jabones tienen precio único, velas tienen precios por tamaño
+    const displayPrice = p.category === 'soap' ? p.price : Math.min(p.prices.small, p.prices.medium, p.prices.large);
+    const priceLabel = p.category === 'soap' ? `$${displayPrice}` : `Desde $${displayPrice.toFixed(2)}`;
     return `
     <div class=\"product-card\" onclick=\"navigate('product', '${p.id}')\">
         <div class=\"product-image\"><img src=\"${p.image}\" alt=\"${p.name}\"></div>
@@ -710,7 +711,7 @@ function renderProductCard(p) {
             <span class=\"product-scent\">${p.scent}</span>
             <h3 class=\"product-name\">${p.name}</h3>
             <p class=\"product-description\">${p.description}</p>
-            <p class=\"product-price\">Desde $${minPrice.toFixed(2)}</p>
+            <p class=\"product-price\">${priceLabel}</p>
         </div>
     </div>`;
 }
@@ -745,6 +746,35 @@ function renderProductDetail() {
     
     const backPage = p.category === 'soap' ? 'jabones' : 'velas';
     const backLabel = p.category === 'soap' ? 'Jabones' : 'Velas';
+    const isSoap = p.category === 'soap';
+    const initialPrice = isSoap ? p.price : p.prices.small;
+    const stockCount = isSoap ? p.stock : p.stock.small;
+    
+    // Selector de tamaño solo para velas
+    const sizeSelector = isSoap ? '' : `
+        <div class=\"size-selector\">
+            <h3>Tamaño</h3>
+            <div class=\"size-options\" id=\"sizeOptions\">
+                <button class=\"size-option active\" data-size=\"small\" onclick=\"selectProductSize(this, ${p.prices.small})\">
+                    <span class=\"size-name\">Pequeño</span><span class=\"size-price\">$${p.prices.small.toFixed(2)}</span>
+                </button>
+                <button class=\"size-option\" data-size=\"medium\" onclick=\"selectProductSize(this, ${p.prices.medium})\">
+                    <span class=\"size-name\">Mediano</span><span class=\"size-price\">$${p.prices.medium.toFixed(2)}</span>
+                </button>
+                <button class=\"size-option\" data-size=\"large\" onclick=\"selectProductSize(this, ${p.prices.large})\">
+                    <span class=\"size-name\">Grande</span><span class=\"size-price\">$${p.prices.large.toFixed(2)}</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Mostrar precio fijo para jabones
+    const priceDisplay = isSoap ? `
+        <div class=\"size-selector\">
+            <h3>Precio</h3>
+            <p style=\"font-family:var(--font-heading);font-size:2rem;color:var(--primary)\">$${p.price}</p>
+        </div>
+    ` : sizeSelector;
     
     return `
     <section class=\"product-detail\">
@@ -762,20 +792,7 @@ function renderProductDetail() {
                         <div class=\"ingredients-list\">${p.ingredients.map(i => `<span class=\"ingredient-tag\">${i}</span>`).join('')}</div>
                     </div>
                     
-                    <div class=\"size-selector\">
-                        <h3>Tamaño</h3>
-                        <div class=\"size-options\" id=\"sizeOptions\">
-                            <button class=\"size-option active\" data-size=\"small\" onclick=\"selectProductSize(this, ${p.prices.small})\">
-                                <span class=\"size-name\">Pequeño</span><span class=\"size-price\">$${p.prices.small.toFixed(2)}</span>
-                            </button>
-                            <button class=\"size-option\" data-size=\"medium\" onclick=\"selectProductSize(this, ${p.prices.medium})\">
-                                <span class=\"size-name\">Mediano</span><span class=\"size-price\">$${p.prices.medium.toFixed(2)}</span>
-                            </button>
-                            <button class=\"size-option\" data-size=\"large\" onclick=\"selectProductSize(this, ${p.prices.large})\">
-                                <span class=\"size-name\">Grande</span><span class=\"size-price\">$${p.prices.large.toFixed(2)}</span>
-                            </button>
-                        </div>
-                    </div>
+                    ${priceDisplay}
                     
                     <div class=\"quantity-selector\">
                         <h3>Cantidad</h3>
@@ -789,12 +806,12 @@ function renderProductDetail() {
                     <div class=\"add-to-cart-section\">
                         <div class=\"total-price\">
                             <span>Total</span>
-                            <span id=\"productTotal\">$${p.prices.small.toFixed(2)}</span>
+                            <span id=\"productTotal\">$${initialPrice}${isSoap ? '' : '.00'}</span>
                         </div>
                         <button class=\"btn btn-primary\" onclick=\"addCurrentProduct()\"><i class=\"fas fa-shopping-bag\"></i> AÑADIR AL CARRITO</button>
                     </div>
                     
-                    <div class=\"stock-info\"><i class=\"fas fa-check-circle\"></i> ${p.stock.small} unidades disponibles</div>
+                    <div class=\"stock-info\"><i class=\"fas fa-check-circle\"></i> ${stockCount} unidades disponibles</div>
                 </div>
             </div>
         </div>
@@ -821,17 +838,21 @@ function changeProductQty(delta) {
 
 function updateProductTotal() {
     const p = products.find(prod => prod.id === currentProduct);
-    const price = p.prices[selectedSize];
-    document.getElementById('productTotal').textContent = '$' + (price * productQty).toFixed(2);
+    const isSoap = p.category === 'soap';
+    const price = isSoap ? p.price : p.prices[selectedSize];
+    document.getElementById('productTotal').textContent = '$' + (price * productQty).toFixed(isSoap ? 0 : 2);
 }
 
 function addCurrentProduct() {
     const p = products.find(prod => prod.id === currentProduct);
-    const price = p.prices[selectedSize];
+    const isSoap = p.category === 'soap';
+    const price = isSoap ? p.price : p.prices[selectedSize];
+    const size = isSoap ? 'unico' : selectedSize;
+    
     addToCart({
         productId: p.id,
         name: p.name,
-        size: selectedSize,
+        size: size,
         price: price,
         quantity: productQty,
         image: p.image,
@@ -1016,7 +1037,7 @@ function renderCheckout() {
                         <button type=\"submit\" class=\"btn btn-primary btn-full\" style=\"background:#25D366\">
                             <i class=\"fab fa-whatsapp\"></i> ENVIAR COTIZACIÓN POR WHATSAPP
                         </button>
-                        <p class=\"form-note\">Se abrirá WhatsApp con tu pedido para coordinar pago y envío</p>
+                        <p class="form-note">Se abrirá WhatsApp con tu pedido para coordinar pago y envío</p>
                     </form>
                 </div>
                 <div>
@@ -1053,62 +1074,37 @@ function submitOrder(e) {
     const form = e.target;
     
     // Crear el mensaje para WhatsApp
-    let message = `🛍️ *NUEVA COTIZACIÓN - ${STORE_NAME}*
-
-`;
-    message += `👤 *Cliente:* ${form.name.value}
-`;
-    message += `📧 *Email:* ${form.email.value}
-`;
-    message += `📱 *Teléfono:* ${form.phone.value}
-`;
-    message += `📍 *Dirección:* ${form.address.value}, ${form.city.value} ${form.postal_code.value}
-`;
+    let message = `🛍️ *NUEVA COTIZACIÓN - ${STORE_NAME}*\n\n`;
+    message += `👤 *Cliente:* ${form.name.value}\n`;
+    message += `📧 *Email:* ${form.email.value}\n`;
+    message += `📱 *Teléfono:* ${form.phone.value}\n`;
+    message += `📍 *Dirección:* ${form.address.value}, ${form.city.value} ${form.postal_code.value}\n`;
     
     if (form.notes.value) {
-        message += `📝 *Notas:* ${form.notes.value}
-`;
+        message += `📝 *Notas:* ${form.notes.value}\n`;
     }
     
-    message += `
-━━━━━━━━━━━━━━━━━━━━
-`;
-    message += `📦 *PRODUCTOS:*
-
-`;
+    message += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `📦 *PRODUCTOS:*\n\n`;
     
     cart.forEach((item, idx) => {
-        message += `${idx + 1}. *${item.name}*
-`;
-        message += `   Tamaño: ${sizeLabels[item.size]}
-`;
-        message += `   Cantidad: ${item.quantity}
-`;
-        message += `   Precio: $${(item.price * item.quantity).toFixed(2)}
-`;
+        message += `${idx + 1}. *${item.name}*\n`;
+        message += `   Tamaño: ${sizeLabels[item.size]}\n`;
+        message += `   Cantidad: ${item.quantity}\n`;
+        message += `   Precio: $${(item.price * item.quantity).toFixed(2)}\n`;
         if (item.isCustom && item.customDetails) {
-            message += `   ✨ Personalizado:
-`;
-            message += `      - Forma: ${item.customDetails.shape}
-`;
-            message += `      - Color: ${item.customDetails.color}
-`;
-            message += `      - Aroma: ${item.customDetails.scent}
-`;
-            message += `      - Ingredientes: ${item.customDetails.ingredients.join(', ')}
-`;
+            message += `   ✨ Personalizado:\n`;
+            message += `      - Forma: ${item.customDetails.shape}\n`;
+            message += `      - Color: ${item.customDetails.color}\n`;
+            message += `      - Aroma: ${item.customDetails.scent}\n`;
+            message += `      - Ingredientes: ${item.customDetails.ingredients.join(', ')}\n`;
         }
-        message += `
-`;
+        message += `\n`;
     });
     
-    message += `━━━━━━━━━━━━━━━━━━━━
-`;
-    message += `💰 *TOTAL: $${getCartTotal().toFixed(2)}*
-`;
-    message += `(Envío a calcular)
-
-`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `💰 *TOTAL: $${getCartTotal().toFixed(2)}*\n`;
+    message += `(Envío a calcular)\n\n`;
     message += `¡Gracias por tu interés! 🙏`;
     
     // Guardar pedido localmente
@@ -1162,6 +1158,8 @@ function renderOrderComplete() {
     </div>`;
 }
 
+
+
 // Admin
 function renderAdmin() {
     const stats = { totalProducts: products.length, totalOrders: orders.length, pendingOrders: orders.filter(o => o.status === 'pending').length, totalRevenue: orders.reduce((s, o) => s + o.total, 0) };
@@ -1169,23 +1167,23 @@ function renderAdmin() {
     let content = '';
     if (adminTab === 'dashboard') {
         content = `
-            <div class=\"admin-header\"><h1>Dashboard</h1></div>
-            <div class=\"stats-grid\">
-                <div class=\"stat-card\"><span class=\"stat-label\">Productos</span><span class=\"stat-value\">${stats.totalProducts}</span></div>
-                <div class=\"stat-card\"><span class=\"stat-label\">Pedidos Totales</span><span class=\"stat-value\">${stats.totalOrders}</span></div>
-                <div class=\"stat-card\"><span class=\"stat-label\">Pedidos Pendientes</span><span class=\"stat-value\">${stats.pendingOrders}</span></div>
-                <div class=\"stat-card\"><span class=\"stat-label\">Ingresos</span><span class=\"stat-value\">$${stats.totalRevenue.toFixed(2)}</span></div>
+            <div class="admin-header"><h1>Dashboard</h1></div>
+            <div class="stats-grid">
+                <div class="stat-card"><span class="stat-label">Productos</span><span class="stat-value">${stats.totalProducts}</span></div>
+                <div class="stat-card"><span class="stat-label">Pedidos Totales</span><span class="stat-value">${stats.totalOrders}</span></div>
+                <div class="stat-card"><span class="stat-label">Pedidos Pendientes</span><span class="stat-value">${stats.pendingOrders}</span></div>
+                <div class="stat-card"><span class="stat-label">Ingresos</span><span class="stat-value">$${stats.totalRevenue.toFixed(2)}</span></div>
             </div>`;
     } else if (adminTab === 'products') {
         content = `
-            <div class=\"admin-header\"><h1>Productos</h1></div>
-            <div class=\"admin-table-container\">
-                <table class=\"admin-table\">
+            <div class="admin-header"><h1>Productos</h1></div>
+            <div class="admin-table-container">
+                <table class="admin-table">
                     <thead><tr><th>Producto</th><th>Categoría</th><th>Precios</th><th>Stock</th></tr></thead>
                     <tbody>
                         ${products.map(p => `
                             <tr>
-                                <td><div class=\"product-cell\"><img src=\"${p.image}\" alt=\"${p.name}\"><span>${p.name}${p.featured ? '<span class=\"featured-badge\">Destacado</span>' : ''}</span></div></td>
+                                <td><div class="product-cell"><img src="${p.image}" alt="${p.name}"><span>${p.name}${p.featured ? '<span class="featured-badge">Destacado</span>' : ''}</span></div></td>
                                 <td>${p.category === 'soap' ? 'Jabón' : 'Vela'}</td>
                                 <td>$${p.prices.small} / $${p.prices.medium} / $${p.prices.large}</td>
                                 <td>${p.stock.small + p.stock.medium + p.stock.large} uds</td>
@@ -1197,20 +1195,20 @@ function renderAdmin() {
     } else if (adminTab === 'orders') {
         const statusLabels = { pending: 'Pendiente', confirmed: 'Confirmado', shipped: 'Enviado', delivered: 'Entregado', cancelled: 'Cancelado' };
         content = `
-            <div class=\"admin-header\"><h1>Pedidos</h1></div>
-            ${orders.length === 0 ? '<div class=\"admin-table-container\" style=\"padding:3rem;text-align:center\"><p>No hay pedidos todavía</p></div>' : `
-            <div class=\"admin-table-container\">
-                <table class=\"admin-table\">
+            <div class="admin-header"><h1>Pedidos</h1></div>
+            ${orders.length === 0 ? '<div class="admin-table-container" style="padding:3rem;text-align:center"><p>No hay pedidos todavía</p></div>' : `
+            <div class="admin-table-container">
+                <table class="admin-table">
                     <thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr></thead>
                     <tbody>
                         ${orders.map(o => `
                             <tr>
                                 <td>#${o.id.slice(-8).toUpperCase()}</td>
-                                <td>${o.customer.name}<br><small style=\"color:var(--text-muted)\">${o.customer.email}</small></td>
+                                <td>${o.customer.name}<br><small style="color:var(--text-muted)">${o.customer.email}</small></td>
                                 <td>$${o.total.toFixed(2)}</td>
                                 <td>
-                                    <select class=\"admin-select\" onchange=\"updateOrderStatus('${o.id}', this.value)\">
-                                        ${Object.entries(statusLabels).map(([k, v]) => `<option value=\"${k}\" ${o.status === k ? 'selected' : ''}>${v}</option>`).join('')}
+                                    <select class="admin-select" onchange="updateOrderStatus('${o.id}', this.value)">
+                                        ${Object.entries(statusLabels).map(([k, v]) => `<option value="${k}" ${o.status === k ? 'selected' : ''}>${v}</option>`).join('')}
                                     </select>
                                 </td>
                                 <td>${new Date(o.createdAt).toLocaleDateString('es-ES')}</td>
@@ -1222,17 +1220,17 @@ function renderAdmin() {
     }
     
     return `
-    <div class=\"admin-layout\">
-        <aside class=\"admin-sidebar\">
-            <div class=\"admin-logo\"><span>Auralia</span><small>Panel Admin</small></div>
-            <nav class=\"admin-nav\">
-                <div class=\"${adminTab === 'dashboard' ? 'active' : ''}\" onclick=\"setAdminTab('dashboard')\"><i class=\"fas fa-chart-line\"></i> Dashboard</div>
-                <div class=\"${adminTab === 'products' ? 'active' : ''}\" onclick=\"setAdminTab('products')\"><i class=\"fas fa-box\"></i> Productos</div>
-                <div class=\"${adminTab === 'orders' ? 'active' : ''}\" onclick=\"setAdminTab('orders')\"><i class=\"fas fa-shopping-cart\"></i> Pedidos</div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo"><span>Auralia</span><small>Panel Admin</small></div>
+            <nav class="admin-nav">
+                <div class="${adminTab === 'dashboard' ? 'active' : ''}" onclick="setAdminTab('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</div>
+                <div class="${adminTab === 'products' ? 'active' : ''}" onclick="setAdminTab('products')"><i class="fas fa-box"></i> Productos</div>
+                <div class="${adminTab === 'orders' ? 'active' : ''}" onclick="setAdminTab('orders')"><i class="fas fa-shopping-cart"></i> Pedidos</div>
             </nav>
-            <div class=\"admin-back\" onclick=\"navigate('home')\"><i class=\"fas fa-arrow-left\"></i> Volver a la tienda</div>
+            <div class="admin-back" onclick="navigate('home')"><i class="fas fa-arrow-left"></i> Volver a la tienda</div>
         </aside>
-        <main class=\"admin-main\">${content}</main>
+        <main class="admin-main">${content}</main>
     </div>`;
 }
 
