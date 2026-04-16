@@ -149,8 +149,9 @@ h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .cta-image img { width: 100%; height: 400px; object-fit: cover; }
 @media (max-width: 768px) { .cta-grid { grid-template-columns: 1fr; gap: 2rem; } }
 
-/* Categories Grid */
+/* Categories Grid - MODIFICADO */
 .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+.categories-grid-full { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem; }
 .category-card { position: relative; aspect-ratio: 4/3; overflow: hidden; display: block; cursor: pointer; }
 .category-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 .category-card:hover img { transform: scale(1.05); }
@@ -407,7 +408,7 @@ h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
 // ==========================================
 
 // Data Store
-const WHATSAPP_NUMBER = "526624047095"; // ← CAMBIA ESTE NÚMERO (sin + ni espacios, ej: 526624047095)
+const WHATSAPP_NUMBER = "526624047095";
 const STORE_NAME = "Auralia";
 const STORE_EMAIL = "auraliacommunity@gmail.com";
 const STORE_PHONE = "+52 662 404 7095";
@@ -417,15 +418,20 @@ const STORE_ADDRESS = "Hermosillo, Sonora";
 // PRECIOS CONFIGURABLES - MODIFICA AQUÍ
 // ==========================================
 const PRECIOS = {
-    // Precio único para jabones
     jabon: 99.99,
-    
-    // Precios por tamaño para velas
     vela: {
         pequeno: 94.99,
         mediano: 179.99,
         grande: 289.99
     }
+};
+
+// URLs de las imágenes de temporada
+const TEMPORADA_IMAGES = {
+    jabones_celebraciones: "https://customer-assets.emergentagent.com/job_64e5c426-c52b-43ac-8d74-06833c6f0fb9/artifacts/5v81118p_PHOTO-2026-04-12-20-57-34.jpg",
+    jabones_estaciones: "https://customer-assets.emergentagent.com/job_64e5c426-c52b-43ac-8d74-06833c6f0fb9/artifacts/l09dvbqc_PHOTO-2026-04-12-20-57-36.jpg",
+    velas_celebraciones: "https://customer-assets.emergentagent.com/job_64e5c426-c52b-43ac-8d74-06833c6f0fb9/artifacts/b0dac8wt_PHOTO-2026-04-12-21-05-42.jpg",
+    velas_estaciones: "https://customer-assets.emergentagent.com/job_64e5c426-c52b-43ac-8d74-06833c6f0fb9/artifacts/gzd2pjjp_PHOTO-2026-04-12-21-05-47.jpg"
 };
 
 const initialProducts = [
@@ -447,12 +453,57 @@ const initialProducts = [
 
     { id: "prod-009", name: "Jabon de Savia", description: "Un jabón purificante con extracto de savia.", category: "soap", image: "img/soap/savia.jpg", price: PRECIOS.jabon, scent: "Hierbas frescas", ingredients: ["Extracto de savia", "Aceite de eucalipto", "Arcilla verde"], stock: 25, featured: true },
 
-    { id: "prod-010", name: "Jabon de Miel", description: "Un jabón nutritivo con miel natural.", category: "soap", image: "img/soap/miel.jpg", price: PRECIOS.jabon, scent: "Miel dulce", ingredients: ["Miel orgánica", "Cera de abejas", "Aceite de almendras"], stock: 40, featured: true }
+    { id: "prod-010", name: "Jabon de Miel", description: "Un jabón nutritivo con miel natural.", category: "soap", image: "img/soap/miel.jpg", price: PRECIOS.jabon, scent: "Miel dulce", ingredients: ["Miel orgánica", "Cera de abejas", "Aceite de almendras"], stock: 40, featured: true },
+
+    // ==========================================
+    // PRODUCTOS DE TEMPORADA - JABONES (10)
+    // ==========================================
+    { id: "temp-soap-001", name: "Jabón Invierno", description: "Jabón reconfortante con aroma a pino y canela. Calidez en temporada fría.", category: "season", productType: "soap", image: "img/soap/temporada/invierno.jpg", price: PRECIOS.jabon, scent: "Pino + Canela", ingredients: ["Aceite de pino", "Canela", "Manteca de karité"], stock: 30, featured: false },
+
+    { id: "temp-soap-002", name: "Jabón Verano", description: "Jabón refrescante con aroma a coco y sandía. Frescura tropical.", category: "season", productType: "soap", image: "img/soap/temporada/verano.jpg", price: PRECIOS.jabon, scent: "Coco + Sandía", ingredients: ["Aceite de coco", "Extracto de sandía", "Aloe vera"], stock: 30, featured: false },
+
+    { id: "temp-soap-003", name: "Jabón Primavera", description: "Jabón floral con fragancia a fresia y flor de cerezo. Renacer primaveral.", category: "season", productType: "soap", image: "img/soap/temporada/primavera.jpg", price: PRECIOS.jabon, scent: "Fresia + Flor de Cerezo", ingredients: ["Extracto de fresia", "Flor de cerezo", "Glicerina"], stock: 30, featured: false },
+
+    { id: "temp-soap-004", name: "Jabón Otoño", description: "Jabón cálido con aroma a manzana y clavo. Esencia otoñal.", category: "season", productType: "soap", image: "img/soap/temporada/otono.jpg", price: PRECIOS.jabon, scent: "Manzana + Clavo", ingredients: ["Extracto de manzana", "Clavo", "Canela"], stock: 30, featured: false },
+
+    { id: "temp-soap-005", name: "Jabón Navidad", description: "Jabón artesanal con aroma a pino y especias navideñas. Perfecto para la temporada festiva.", category: "season", productType: "soap", image: "img/soap/temporada/navidad.jpg", price: PRECIOS.jabon, scent: "Pino + Especias", ingredients: ["Aceite de pino", "Canela", "Clavo de olor"], stock: 30, featured: false },
+
+    { id: "temp-soap-006", name: "Jabón San Valentín", description: "Jabón romántico con fragancia a fresas y rosas. Ideal para expresar tu amor.", category: "season", productType: "soap", image: "img/soap/temporada/san valentin.jpg", price: PRECIOS.jabon, scent: "Fresas + Rosas", ingredients: ["Extracto de fresa", "Pétalos de rosa", "Glicerina"], stock: 30, featured: false },
+
+    { id: "temp-soap-007", name: "Jabón Día de las Madres", description: "Jabón delicado con notas florales y vainilla. Un regalo especial para mamá.", category: "season", productType: "soap", image: "img/soap/temporada/dia de las madres.jpg", price: PRECIOS.jabon, scent: "Flores + Vainilla", ingredients: ["Aceite de flores", "Extracto de vainilla", "Manteca de karité"], stock: 30, featured: false },
+
+    { id: "temp-soap-008", name: "Jabón Halloween", description: "Jabón con aroma a calabaza especiada. Perfecto para la temporada de otoño.", category: "season", productType: "soap", image: "img/soap/temporada/halloween.jpg", price: PRECIOS.jabon, scent: "Calabaza Especiada", ingredients: ["Extracto de calabaza", "Canela", "Nuez moscada"], stock: 30, featured: false },
+
+    { id: "temp-soap-009", name: "Jabón Feliz Cumpleaños", description: "Jabón festivo con aroma a pastel y vainilla. Celebra cada día especial.", category: "season", productType: "soap", image: "img/soap/temporada/feliz cumpleanos.jpg", price: PRECIOS.jabon, scent: "Pastel + Vainilla", ingredients: ["Extracto de vainilla", "Esencia dulce", "Aceite de almendras"], stock: 30, featured: false },
+
+    { id: "temp-soap-010", name: "Jabón Fiesta", description: "Jabón tropical con fragancia a margarita. Perfecto para celebraciones.", category: "season", productType: "soap", image: "img/soap/temporada/fiesta.jpg", price: PRECIOS.jabon, scent: "Margarita Tropical", ingredients: ["Lima", "Sal de mar", "Aceite de coco"], stock: 30, featured: false },
+
+    // ==========================================
+    // PRODUCTOS DE TEMPORADA - VELAS (10)
+    // ==========================================
+    { id: "temp-candle-001", name: "Vela Invierno", description: "Vela reconfortante con aroma a pino y canela. Calidez para días fríos.", category: "season", productType: "candle", image: "img/candle/temporada/invierno.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Pino + Canela", ingredients: ["Cera de soya", "Aceite de pino", "Canela"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-002", name: "Vela Primavera", description: "Vela floral con fragancia a fresia y flor de cerezo. Frescura primaveral.", category: "season", productType: "candle", image: "img/candle/temporada/primavera.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Fresia + Flor de Cerezo", ingredients: ["Cera de soya", "Extracto de fresia", "Aceite floral"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-003", name: "Vela Verano", description: "Vela refrescante con aroma a coco y sandía. Vibrante y tropical.", category: "season", productType: "candle", image: "img/candle/temporada/verano.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Coco + Sandía", ingredients: ["Cera de soya", "Aceite de coco", "Esencia de sandía"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-004", name: "Vela Otoño", description: "Vela cálida con aroma a manzana y clavo. Esencia de la temporada.", category: "season", productType: "candle", image: "img/candle/temporada/otono.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Manzana + Clavo", ingredients: ["Cera de soya", "Extracto de manzana", "Clavo"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-005", name: "Vela Navidad", description: "Vela aromática con fragancia a pino y especias navideñas. Crea el ambiente perfecto para las fiestas.", category: "season", productType: "candle", image: "img/candle/temporada/navidad.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Pino + Especias", ingredients: ["Cera de soya", "Aceite de pino", "Canela"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-006", name: "Vela San Valentín", description: "Vela romántica con aroma a fresas y rosas. Perfecta para momentos especiales.", category: "season", productType: "candle", image: "img/candle/temporada/san valentin.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Fresas + Rosas", ingredients: ["Cera de soya", "Extracto de fresa", "Aceite de rosa"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-007", name: "Vela Día de las Madres", description: "Vela con notas florales y vainilla. Un detalle especial para mamá.", category: "season", productType: "candle", image: "img/candle/temporada/dia de las madres.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Flores + Vainilla", ingredients: ["Cera de soya", "Aceites florales", "Extracto de vainilla"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-008", name: "Vela Halloween", description: "Vela con aroma a calabaza especiada. Ambiente perfecto para la noche de brujas.", category: "season", productType: "candle", image: "img/candle/temporada/halloween.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Calabaza Especiada", ingredients: ["Cera de soya", "Extracto de calabaza", "Especias"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-009", name: "Vela Feliz Cumpleaños", description: "Vela festiva con aroma a pastel y vainilla. Celebra cada momento.", category: "season", productType: "candle", image: "img/candle/temporada/feliz cumpleanos.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Pastel + Vainilla", ingredients: ["Cera de soya", "Esencia de vainilla", "Aceites dulces"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
+
+    { id: "temp-candle-010", name: "Vela Fiesta", description: "Vela tropical con fragancia a margarita. Ambiente de celebración.", category: "season", productType: "candle", image: "img/candle/temporada/fiesta.jpg", prices: { small: PRECIOS.vela.pequeno, medium: PRECIOS.vela.mediano, large: PRECIOS.vela.grande }, scent: "Margarita Tropical", ingredients: ["Cera de soya", "Lima", "Aceite de coco"], stock: { small: 30, medium: 20, large: 10 }, featured: false },
 ];
 
-// Opciones del personalizador - SEPARADAS POR TIPO DE PRODUCTO
+// Opciones del personalizador
 const customizerOptions = {
-    // Figuras (iguales para ambos productos)
     shapes: [
         { id: 'circle', label: 'Círculo', icon: '⬤' },
         { id: 'square', label: 'Cuadrado', icon: '◻' },
@@ -461,8 +512,6 @@ const customizerOptions = {
         { id: 'flower', label: 'Flor', icon: '✿' },
         { id: 'oval', label: 'Ovalado', icon: '⬭' }
     ],
-    
-    // Colores (iguales para ambos)
     colors: [
         { id: 'natural', label: 'Natural', hex: '#F5F5DC' },
         { id: 'lavender', label: 'Lavanda', hex: '#E6E6FA' },
@@ -473,8 +522,6 @@ const customizerOptions = {
         { id: 'coral', label: 'Coral', hex: '#FF7F50' },
         { id: 'cream', label: 'Crema', hex: '#FFFDD0' }
     ],
-    
-    // Aromas para JABONES
     soapScents: [
         { id: 'lavender', label: 'Lavanda', description: 'Relajante y calmante' },
         { id: 'rose', label: 'Rosa', description: 'Delicado y romántico' },
@@ -483,8 +530,6 @@ const customizerOptions = {
         { id: 'eucalyptus', label: 'Eucalipto', description: 'Refrescante y purificante' },
         { id: 'coconut', label: 'Coco', description: 'Tropical y suave' }
     ],
-    
-    // Aromas para VELAS
     candleScents: [
         { id: 'vanilla_lavender', label: 'Vainilla + Lavanda', description: 'Relajante nocturno' },
         { id: 'orange_vanilla', label: 'Naranja + Vainilla', description: 'Cálido y dulce' },
@@ -493,8 +538,6 @@ const customizerOptions = {
         { id: 'rose_petals', label: 'Pétalos de rosa', description: 'Floral y romántico' },
         { id: 'sandalwood', label: 'Sándalo', description: 'Amaderado y sofisticado' }
     ],
-    
-    // Ingredientes para JABONES
     soapIngredients: [
         { id: 'shea', label: 'Manteca de Karité', benefit: 'Hidratación profunda' },
         { id: 'oatmeal', label: 'Avena', benefit: 'Exfoliación suave' },
@@ -505,8 +548,6 @@ const customizerOptions = {
         { id: 'clay', label: 'Arcilla Verde', benefit: 'Purificante' },
         { id: 'rosehip', label: 'Rosa Mosqueta', benefit: 'Regenerador' }
     ],
-    
-    // Ingredientes para VELAS
     candleIngredients: [
         { id: 'soy_wax', label: 'Cera de Soya', benefit: 'Quemado limpio y duradero' },
         { id: 'beeswax', label: 'Cera de Abeja', benefit: 'Purifica el aire' },
@@ -515,8 +556,6 @@ const customizerOptions = {
         { id: 'dried_flowers', label: 'Flores Secas', benefit: 'Decoración natural' },
         { id: 'crystals', label: 'Cristales', benefit: 'Energía positiva' }
     ],
-    
-    // Tamaños para VELAS (con precios)
     candleSizes: [
         { id: 'small', label: 'Pequeño', weight: '100g - 20hrs de duración', price: PRECIOS.vela.pequeno },
         { id: 'medium', label: 'Mediano', weight: '200g - 40hrs de duración', price: PRECIOS.vela.mediano },
@@ -548,7 +587,7 @@ function addToCart(item) {
     if (existingIndex >= 0) { cart[existingIndex].quantity += item.quantity; }
     else { cart.push(item); }
     saveCart(); 
-    cartOpen = true; // Abrir el carrito al agregar producto
+    cartOpen = true;
     render(); 
     showToast('Añadido al carrito');
 }
@@ -598,6 +637,7 @@ function render() {
         case 'home': content += renderHome(); break;
         case 'jabones': content += renderCatalog('soap'); break;
         case 'velas': content += renderCatalog('candle'); break;
+        case 'temporada': content += renderCatalog('season'); break;
         case 'product': content += renderProductDetail(); break;
         case 'customizer': content += renderCustomizer(); break;
         case 'checkout': content += renderCheckout(); break;
@@ -618,6 +658,7 @@ function renderHeader() {
                 <span class="nav-link ${currentPage === 'home' ? 'active' : ''}" onclick="navigate('home')">Inicio</span>
                 <span class="nav-link ${currentPage === 'jabones' ? 'active' : ''}" onclick="navigate('jabones', 'soap')">Jabones</span>
                 <span class="nav-link ${currentPage === 'velas' ? 'active' : ''}" onclick="navigate('velas', 'candle')">Velas</span>
+                <span class="nav-link ${currentPage === 'temporada' ? 'active' : ''}" onclick="navigate('temporada', 'season')">Temporada</span>
                 <span class="nav-link ${currentPage === 'customizer' ? 'active' : ''}" onclick="navigate('customizer')">Crea tu Producto</span>
             </nav>
             <div class="header-actions">
@@ -678,6 +719,7 @@ function renderFooter() {
                     <a onclick="navigate('home')">Inicio</a>
                     <a onclick="navigate('jabones', 'soap')">Jabones</a>
                     <a onclick="navigate('velas', 'candle')">Velas</a>
+                    <a onclick="navigate('temporada', 'season')">Temporada</a>
                     <a onclick="navigate('customizer')">Crea tu Producto</a>
                 </div>
                 <div class="footer-contact">
@@ -762,13 +804,35 @@ function renderHome() {
                     </div>
                 </div>
             </div>
+            <div class="categories-grid-full">
+                <div class="category-card" onclick="navigate('temporada', 'season')">
+                    <img src="#" alt="Temporada">
+                    <div class="category-overlay"></div>
+                    <div class="category-content">
+                        <span class="label">COLECCIÓN ESPECIAL</span>
+                        <h3>Temporada</h3>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>`;
 }
 
 function renderProductCard(p) {
-    const displayPrice = p.category === 'soap' ? p.price : Math.min(p.prices.small, p.prices.medium, p.prices.large);
-    const priceLabel = p.category === 'soap' ? `$${displayPrice}` : `Desde $${displayPrice.toFixed(2)}`;
+    // Para productos de temporada, verificar si es jabón o vela
+    const isSeasonProduct = p.category === 'season';
+    const isCandle = isSeasonProduct ? p.productType === 'candle' : p.category === 'candle';
+    const isSoap = isSeasonProduct ? p.productType === 'soap' : p.category === 'soap';
+    
+    let displayPrice, priceLabel;
+    if (isCandle) {
+        displayPrice = Math.min(p.prices.small, p.prices.medium, p.prices.large);
+        priceLabel = `Desde $${displayPrice.toFixed(2)}`;
+    } else {
+        displayPrice = p.price;
+        priceLabel = `$${displayPrice}`;
+    }
+    
     return `
     <div class="product-card" onclick="navigate('product', '${p.id}')">
         <div class="product-image"><img src="${p.image}" alt="${p.name}"></div>
@@ -783,9 +847,15 @@ function renderProductCard(p) {
 
 function renderCatalog(category) {
     const items = products.filter(p => p.category === category);
-    const info = category === 'soap' ? 
-        { title: 'Jabones Artesanales', subtitle: 'Cuidado natural para tu piel', desc: 'Nuestros jabones están elaborados con ingredientes naturales de la más alta calidad.', img: 'https://images.pexels.com/photos/3735152/pexels-photo-3735152.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' } :
-        { title: 'Velas Aromáticas', subtitle: 'Aromas que transforman espacios', desc: 'Velas con fragancias naturales para momentos únicos.', img: 'https://images.pexels.com/photos/7234629/pexels-photo-7234629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' };
+    let info;
+    
+    if (category === 'soap') {
+        info = { title: 'Jabones Artesanales', subtitle: 'Cuidado natural para tu piel', desc: 'Nuestros jabones están elaborados con ingredientes naturales de la más alta calidad.', img: 'https://images.pexels.com/photos/3735152/pexels-photo-3735152.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' };
+    } else if (category === 'candle') {
+        info = { title: 'Velas Aromáticas', subtitle: 'Aromas que transforman espacios', desc: 'Velas con fragancias naturales para momentos únicos.', img: 'https://images.pexels.com/photos/7234629/pexels-photo-7234629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' };
+    } else if (category === 'season') {
+        info = { title: 'Colección Temporada', subtitle: 'Ediciones especiales y limitadas', desc: 'Jabones y velas artesanales para cada celebración y estación del año.', img: TEMPORADA_IMAGES.jabones_celebraciones };
+    }
     
     return `
     <section class="page-hero">
@@ -809,9 +879,22 @@ function renderProductDetail() {
     const p = products.find(prod => prod.id === currentProduct);
     if (!p) return '<div class="empty-state"><h2>Producto no encontrado</h2></div>';
     
-    const backPage = p.category === 'soap' ? 'jabones' : 'velas';
-    const backLabel = p.category === 'soap' ? 'Jabones' : 'Velas';
-    const isSoap = p.category === 'soap';
+    // Determinar categoría para volver
+    let backPage, backLabel;
+    if (p.category === 'season') {
+        backPage = 'temporada';
+        backLabel = 'Temporada';
+    } else if (p.category === 'soap') {
+        backPage = 'jabones';
+        backLabel = 'Jabones';
+    } else {
+        backPage = 'velas';
+        backLabel = 'Velas';
+    }
+    
+    // Determinar si es jabón o vela (incluyendo productos de temporada)
+    const isSeasonProduct = p.category === 'season';
+    const isSoap = isSeasonProduct ? p.productType === 'soap' : p.category === 'soap';
     const initialPrice = isSoap ? p.price : p.prices.small;
     const stockCount = isSoap ? p.stock : p.stock.small;
     
@@ -901,14 +984,16 @@ function changeProductQty(delta) {
 
 function updateProductTotal() {
     const p = products.find(prod => prod.id === currentProduct);
-    const isSoap = p.category === 'soap';
+    const isSeasonProduct = p.category === 'season';
+    const isSoap = isSeasonProduct ? p.productType === 'soap' : p.category === 'soap';
     const price = isSoap ? p.price : p.prices[selectedSize];
     document.getElementById('productTotal').textContent = '$' + (price * productQty).toFixed(isSoap ? 0 : 2);
 }
 
 function addCurrentProduct() {
     const p = products.find(prod => prod.id === currentProduct);
-    const isSoap = p.category === 'soap';
+    const isSeasonProduct = p.category === 'season';
+    const isSoap = isSeasonProduct ? p.productType === 'soap' : p.category === 'soap';
     const price = isSoap ? p.price : p.prices[selectedSize];
     const size = isSoap ? 'unico' : selectedSize;
     
@@ -929,7 +1014,6 @@ function addCurrentProduct() {
 // CUSTOMIZER - CREA TU PRODUCTO
 // ==========================================
 function renderCustomizer() {
-    // Determinar los pasos según el tipo de producto
     let steps = [];
     let totalSteps = 5;
     
@@ -946,7 +1030,7 @@ function renderCustomizer() {
     let stepContent = '';
     
     switch(customizerStep) {
-        case 0: // Selección de tipo de producto
+        case 0:
             stepContent = `
                 <p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem">¿Qué te gustaría crear hoy?</p>
                 <div class="product-type-options">
@@ -963,26 +1047,26 @@ function renderCustomizer() {
                 </div>
             `;
             break;
-        case 1: // Forma (igual para ambos)
+        case 1:
             stepContent = `<div class="options-grid">${customizerOptions.shapes.map(s => `
                 <button class="option-btn ${customProduct.shape === s.id ? 'active' : ''}" onclick="selectCustomShape('${s.id}')">
                     <span class="option-icon">${s.icon}</span><span class="option-label">${s.label}</span>
                 </button>`).join('')}</div>`;
             break;
-        case 2: // Color (igual para ambos)
+        case 2:
             stepContent = `<div class="color-options">${customizerOptions.colors.map(c => `
                 <button class="color-btn ${customProduct.color === c.id ? 'active' : ''}" onclick="selectCustomColor('${c.id}')">
                     <span class="color-swatch" style="background-color:${c.hex}"></span><span class="color-label">${c.label}</span>
                 </button>`).join('')}</div>`;
             break;
-        case 3: // Aroma (diferente según producto)
+        case 3:
             const scents = customProduct.productType === 'soap' ? customizerOptions.soapScents : customizerOptions.candleScents;
             stepContent = `<div class="scent-options">${scents.map(s => `
                 <button class="scent-btn ${customProduct.scent === s.id ? 'active' : ''}" onclick="selectCustomScent('${s.id}')">
                     <span class="scent-name">${s.label}</span><span class="scent-desc">${s.description}</span>
                 </button>`).join('')}</div>`;
             break;
-        case 4: // Ingredientes (diferente según producto)
+        case 4:
             const ingredients = customProduct.productType === 'soap' ? customizerOptions.soapIngredients : customizerOptions.candleIngredients;
             stepContent = `<p class="ingredient-note">Selecciona hasta 3 ingredientes</p>
                 <div class="ingredient-options">${ingredients.map(i => `
@@ -992,7 +1076,7 @@ function renderCustomizer() {
                     <span class="ingredient-name">${i.label}</span><span class="ingredient-benefit">${i.benefit}</span>
                 </button>`).join('')}</div>`;
             break;
-        case 5: // Tamaño (solo para velas)
+        case 5:
             if (customProduct.productType === 'candle') {
                 stepContent = `<div class="size-options-customizer">${customizerOptions.candleSizes.map(s => `
                     <button class="size-btn ${customProduct.size === s.id ? 'active' : ''}" onclick="selectCustomSize('${s.id}')">
@@ -1003,7 +1087,6 @@ function renderCustomizer() {
             break;
     }
     
-    // Determinar si puede proceder
     let canProceed = false;
     switch(customizerStep) {
         case 0: canProceed = !!customProduct.productType; break;
@@ -1014,10 +1097,8 @@ function renderCustomizer() {
         case 5: canProceed = customProduct.productType === 'candle' && !!customProduct.size; break;
     }
     
-    // Último paso según el producto
     const isLastStep = customProduct.productType === 'soap' ? customizerStep === 4 : customizerStep === 5;
     
-    // Preview tags
     const previewTags = [];
     if (customProduct.productType) {
         previewTags.push(`Producto: ${customProduct.productType === 'soap' ? 'Jabón' : 'Vela'}`);
@@ -1041,197 +1122,145 @@ function renderCustomizer() {
         previewTags.push(`Precio: $${PRECIOS.jabon}`);
     }
     
-    // Calcular el número máximo de pasos
-    const maxSteps = customProduct.productType === 'candle' ? 6 : 5;
+    const stepTitles = ['Tipo de Producto', 'Elige la Forma', 'Elige el Color', 'Selecciona el Aroma', 'Añade Ingredientes', 'Selecciona Tamaño'];
     
     return `
-    <section class="page-hero">
-        <div class="page-hero-bg" style="background-image: url('https://images.pexels.com/photos/4871293/pexels-photo-4871293.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');"></div>
-        <div class="page-hero-overlay"></div>
-        <div class="page-hero-content" style="text-align:center">
-            <i class="fas fa-sparkles" style="font-size:2rem;margin-bottom:1rem"></i>
-            <h1>Crea tu Producto</h1>
-            <p style="margin:0 auto">Diseña tu producto único según tus preferencias</p>
-        </div>
-    </section>
     <section class="customizer-section">
         <div class="container">
             <div class="customizer-container">
                 <div class="steps-progress">
-                    ${Array.from({length: maxSteps}, (_, i) => `
-                        <div class="step-indicator ${i === customizerStep ? 'active' : i < customizerStep ? 'completed' : ''}" onclick="goToCustomizerStep(${i})">
-                            ${i < customizerStep ? '<i class="fas fa-check"></i>' : i + 1}
-                        </div>
-                        ${i < maxSteps - 1 ? `<div class="step-line ${i < customizerStep ? 'completed' : ''}"></div>` : ''}
+                    ${Array.from({length: totalSteps}, (_, i) => `
+                        <span class="step-indicator ${i < customizerStep ? 'completed' : ''} ${i === customizerStep ? 'active' : ''}" onclick="${i < customizerStep ? `goToStep(${i})` : ''}">${i + 1}</span>
+                        ${i < totalSteps - 1 ? `<span class="step-line ${i < customizerStep ? 'completed' : ''}"></span>` : ''}
                     `).join('')}
                 </div>
+                
                 <div class="customizer-card">
                     <div class="customizer-header">
-                        <span class="label">PASO ${customizerStep + 1} DE ${maxSteps}</span>
-                        <h2>${steps[customizerStep] || 'Tamaño'}</h2>
+                        <span class="label">PASO ${customizerStep + 1} DE ${totalSteps}</span>
+                        <h2>${stepTitles[customizerStep]}</h2>
                     </div>
+                    
                     ${stepContent}
+                    
+                    ${previewTags.length > 0 ? `
+                    <div class="selection-preview">
+                        <h3>Tu selección</h3>
+                        <div class="selection-tags">${previewTags.map(t => t.includes('selection-tag') ? t : `<span class="selection-tag">${t}</span>`).join('')}</div>
+                    </div>` : ''}
+                    
                     <div class="customizer-nav">
-                        <button class="btn btn-outline" onclick="prevCustomizerStep()" ${customizerStep === 0 ? 'style="visibility:hidden"' : ''}>
-                            <i class="fas fa-arrow-left"></i> Atrás
+                        <button class="btn btn-outline" onclick="${customizerStep === 0 ? "navigate('home')" : 'prevStep()'}">
+                            <i class="fas fa-arrow-left"></i> ${customizerStep === 0 ? 'CANCELAR' : 'ANTERIOR'}
                         </button>
-                        ${isLastStep ? 
-                            `<button class="btn btn-primary" onclick="addCustomToCart()" ${!canProceed ? 'disabled' : ''}><i class="fas fa-shopping-bag"></i> Añadir al Carrito</button>` :
-                            `<button class="btn btn-primary" onclick="nextCustomizerStep()" ${!canProceed ? 'disabled' : ''}>Siguiente <i class="fas fa-arrow-right"></i></button>`
-                        }
+                        ${isLastStep ? `
+                            <button class="btn btn-primary" onclick="addCustomToCart()" ${!canProceed ? 'disabled style="opacity:0.5"' : ''}>
+                                <i class="fas fa-shopping-bag"></i> AÑADIR AL CARRITO
+                            </button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="nextStep()" ${!canProceed ? 'disabled style="opacity:0.5"' : ''}>
+                                SIGUIENTE <i class="fas fa-arrow-right"></i>
+                            </button>
+                        `}
                     </div>
-                </div>
-                <div class="selection-preview">
-                    <h3>Tu Selección</h3>
-                    <div class="selection-tags">${previewTags.length ? previewTags.map(t => t.includes('selection-tag') ? t : `<span class="selection-tag">${t}</span>`).join('') : '<span class="selection-tag">Ninguna selección</span>'}</div>
                 </div>
             </div>
         </div>
     </section>`;
 }
 
-function selectProductType(type) { 
-    customProduct.productType = type; 
-    // Resetear selecciones cuando cambia el tipo
-    customProduct.scent = '';
-    customProduct.ingredients = [];
-    customProduct.size = 'medium';
-    render(); 
-}
+function selectProductType(type) { customProduct.productType = type; customProduct.scent = ''; customProduct.ingredients = []; customProduct.size = 'medium'; render(); }
 function selectCustomShape(id) { customProduct.shape = id; render(); }
 function selectCustomColor(id) { customProduct.color = id; render(); }
 function selectCustomScent(id) { customProduct.scent = id; render(); }
 function selectCustomSize(id) { customProduct.size = id; render(); }
 function toggleCustomIngredient(id) {
     const idx = customProduct.ingredients.indexOf(id);
-    if (idx >= 0) customProduct.ingredients.splice(idx, 1);
-    else if (customProduct.ingredients.length < 3) customProduct.ingredients.push(id);
+    if (idx >= 0) { customProduct.ingredients.splice(idx, 1); }
+    else if (customProduct.ingredients.length < 3) { customProduct.ingredients.push(id); }
     render();
 }
-
-function nextCustomizerStep() { 
-    const maxSteps = customProduct.productType === 'candle' ? 5 : 4;
-    if (customizerStep < maxSteps) { 
-        customizerStep++; 
-        render(); 
-    } 
-}
-
-function prevCustomizerStep() { 
-    if (customizerStep > 0) { 
-        customizerStep--; 
-        render(); 
-    } 
-}
-
-function goToCustomizerStep(step) { 
-    if (step <= customizerStep) { 
-        customizerStep = step; 
-        render(); 
-    } 
-}
+function nextStep() { customizerStep++; render(); }
+function prevStep() { customizerStep--; render(); }
+function goToStep(step) { customizerStep = step; render(); }
 
 function addCustomToCart() {
     const isSoap = customProduct.productType === 'soap';
-    const scents = isSoap ? customizerOptions.soapScents : customizerOptions.candleScents;
-    const ingredients = isSoap ? customizerOptions.soapIngredients : customizerOptions.candleIngredients;
-    
-    // Precio según tipo de producto
-    let price, size;
-    if (isSoap) {
-        price = PRECIOS.jabon;
-        size = 'unico';
-    } else {
-        const sizeObj = customizerOptions.candleSizes.find(s => s.id === customProduct.size);
-        price = sizeObj.price;
-        size = customProduct.size;
-    }
+    const price = isSoap ? PRECIOS.jabon : customizerOptions.candleSizes.find(s => s.id === customProduct.size).price;
+    const size = isSoap ? 'unico' : customProduct.size;
+    const productName = isSoap ? 'Jabón Personalizado' : 'Vela Personalizada';
     
     addToCart({
-        productId: 'custom-' + Date.now(),
-        name: isSoap ? 'Jabón Personalizado' : 'Vela Personalizada',
+        productId: `custom-${Date.now()}`,
+        name: productName,
         size: size,
         price: price,
         quantity: 1,
-        image: isSoap ? 
-            'https://images.pexels.com/photos/3735152/pexels-photo-3735152.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' :
-            'https://images.pexels.com/photos/7234629/pexels-photo-7234629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+        image: isSoap ? 'https://images.pexels.com/photos/3735152/pexels-photo-3735152.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' : 'https://images.pexels.com/photos/7234629/pexels-photo-7234629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
         isCustom: true,
-        customDetails: {
-            productType: isSoap ? 'Jabón' : 'Vela',
-            shape: customizerOptions.shapes.find(s => s.id === customProduct.shape).label,
-            color: customizerOptions.colors.find(c => c.id === customProduct.color).label,
-            scent: scents.find(s => s.id === customProduct.scent).label,
-            ingredients: customProduct.ingredients.map(id => ingredients.find(i => i.id === id).label)
-        }
+        customDetails: {...customProduct}
     });
     
-    // Resetear
     customProduct = { productType: '', shape: '', color: '', scent: '', ingredients: [], size: 'medium' };
     customizerStep = 0;
-    navigate('checkout');
 }
 
-// Checkout
+// ==========================================
+// CHECKOUT
+// ==========================================
 function renderCheckout() {
     if (cart.length === 0) {
-        return `<div class="empty-state"><i class="fas fa-box-open"></i><h2>Tu carrito está vacío</h2><p>Añade productos antes de continuar</p><button class="btn btn-primary" onclick="navigate('home')">Ver Productos</button></div>`;
+        return `<div class="empty-state"><i class="fas fa-shopping-bag"></i><h2>Tu carrito está vacío</h2><p>Añade productos antes de finalizar tu pedido.</p><button class="btn btn-primary" onclick="navigate('home')">IR A LA TIENDA</button></div>`;
     }
     
     return `
     <section class="checkout-section">
         <div class="container">
             <span class="back-link" onclick="navigate('home')"><i class="fas fa-arrow-left"></i> Volver a la tienda</span>
-            <h1 style="margin-bottom:2rem">Finalizar Pedido</h1>
             <div class="checkout-grid">
-                <div>
-                    <form class="checkout-form" onsubmit="submitOrder(event)">
-                        <div class="form-card">
-                            <h2>Información de Contacto</h2>
-                            <div class="form-grid">
-                                <div class="form-group"><label class="form-label">Nombre completo *</label><input type="text" name="name" class="form-input" required></div>
-                                <div class="form-group"><label class="form-label">Email *</label><input type="email" name="email" class="form-input" required></div>
-                                <div class="form-group full"><label class="form-label">Teléfono *</label><input type="tel" name="phone" class="form-input" required></div>
-                            </div>
+                <div class="checkout-form">
+                    <div class="form-card">
+                        <h2>Información de Contacto</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label class="form-label">Nombre</label><input type="text" class="form-input" id="checkoutName" placeholder="Tu nombre"></div>
+                            <div class="form-group"><label class="form-label">Teléfono</label><input type="tel" class="form-input" id="checkoutPhone" placeholder="Tu teléfono"></div>
+                            <div class="form-group full"><label class="form-label">Email (Opcional)</label><input type="email" class="form-input" id="checkoutEmail" placeholder="tu@email.com"></div>
                         </div>
-                        <div class="form-card">
-                            <h2>Dirección de Envío</h2>
-                            <div class="form-grid">
-                                <div class="form-group full"><label class="form-label">Dirección *</label><input type="text" name="address" class="form-input" required></div>
-                                <div class="form-group"><label class="form-label">Ciudad *</label><input type="text" name="city" class="form-input" required></div>
-                                <div class="form-group"><label class="form-label">Código Postal *</label><input type="text" name="postal_code" class="form-input" required></div>
-                            </div>
+                    </div>
+                    
+                    <div class="form-card">
+                        <h2>Dirección de Envío</h2>
+                        <div class="form-grid">
+                            <div class="form-group full"><label class="form-label">Dirección</label><input type="text" class="form-input" id="checkoutAddress" placeholder="Calle y número"></div>
+                            <div class="form-group"><label class="form-label">Colonia</label><input type="text" class="form-input" id="checkoutColonia" placeholder="Colonia"></div>
+                            <div class="form-group"><label class="form-label">Código Postal</label><input type="text" class="form-input" id="checkoutCP" placeholder="C.P."></div>
+                            <div class="form-group full"><label class="form-label">Ciudad</label><input type="text" class="form-input" id="checkoutCity" placeholder="Ciudad" value="Hermosillo"></div>
+                            <div class="form-group full"><label class="form-label">Notas (Opcional)</label><textarea class="form-textarea" id="checkoutNotes" placeholder="Instrucciones especiales de entrega..."></textarea></div>
                         </div>
-                        <div class="form-card">
-                            <h2>Notas Adicionales</h2>
-                            <div class="form-group"><label class="form-label">Comentarios (opcional)</label><textarea name="notes" class="form-textarea" placeholder="Instrucciones especiales..."></textarea></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-full" style="background:#25D366">
-                            <i class="fab fa-whatsapp"></i> ENVIAR COTIZACIÓN POR WHATSAPP
-                        </button>
-                        <p class="form-note">Se abrirá WhatsApp con tu pedido para coordinar pago y envío</p>
-                    </form>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-full" onclick="submitOrder()"><i class="fab fa-whatsapp"></i> CONFIRMAR PEDIDO POR WHATSAPP</button>
+                    <p class="form-note">Al confirmar, serás redirigido a WhatsApp para completar tu pedido.</p>
                 </div>
-                <div>
-                    <div class="order-summary">
-                        <h2>Resumen del Pedido</h2>
-                        <div class="order-items">
-                            ${cart.map(item => `
-                                <div class="order-item">
-                                    <img src="${item.image}" alt="${item.name}" class="order-item-image">
-                                    <div class="order-item-info">
-                                        <p class="order-item-name">${item.name}</p>
-                                        <p class="order-item-size">${sizeLabels[item.size]} × ${item.quantity}${item.isCustom ? ' • Personalizado' : ''}</p>
-                                        <p class="order-item-price">$${(item.price * item.quantity).toFixed(2)}</p>
-                                    </div>
+                
+                <div class="order-summary">
+                    <h2>Resumen del Pedido</h2>
+                    <div class="order-items">
+                        ${cart.map(item => `
+                            <div class="order-item">
+                                <img src="${item.image}" alt="${item.name}" class="order-item-image">
+                                <div class="order-item-info">
+                                    <p class="order-item-name">${item.name}</p>
+                                    <p class="order-item-size">${sizeLabels[item.size]} × ${item.quantity}</p>
+                                    <p class="order-item-price">$${(item.price * item.quantity).toFixed(2)}</p>
                                 </div>
-                            `).join('')}
-                        </div>
-                        <div class="order-totals">
-                            <div class="order-total-row"><span>Subtotal</span><span>$${getCartTotal().toFixed(2)}</span></div>
-                            <div class="order-total-row"><span>Envío</span><span>A calcular</span></div>
-                            <div class="order-total-row total"><span>Total</span><span>$${getCartTotal().toFixed(2)}</span></div>
-                        </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-totals">
+                        <div class="order-total-row"><span>Subtotal</span><span>$${getCartTotal().toFixed(2)}</span></div>
+                        <div class="order-total-row"><span>Envío</span><span>Por confirmar</span></div>
+                        <div class="order-total-row total"><span>Total</span><span>$${getCartTotal().toFixed(2)}</span></div>
                     </div>
                 </div>
             </div>
@@ -1239,179 +1268,177 @@ function renderCheckout() {
     </section>`;
 }
 
-let lastOrderId = '';
-
-function submitOrder(e) {
-    e.preventDefault();
-    const form = e.target;
+function submitOrder() {
+    const name = document.getElementById('checkoutName').value.trim();
+    const phone = document.getElementById('checkoutPhone').value.trim();
+    const address = document.getElementById('checkoutAddress').value.trim();
+    const colonia = document.getElementById('checkoutColonia').value.trim();
+    const cp = document.getElementById('checkoutCP').value.trim();
+    const city = document.getElementById('checkoutCity').value.trim();
+    const notes = document.getElementById('checkoutNotes').value.trim();
     
-    let message = `🛍️ *NUEVA COTIZACIÓN - ${STORE_NAME}*\n\n`;
-    message += `👤 *Cliente:* ${form.name.value}\n`;
-    message += `📧 *Email:* ${form.email.value}\n`;
-    message += `📱 *Teléfono:* ${form.phone.value}\n`;
-    message += `📍 *Dirección:* ${form.address.value}, ${form.city.value} ${form.postal_code.value}\n`;
-    
-    if (form.notes.value) {
-        message += `📝 *Notas:* ${form.notes.value}\n`;
+    if (!name || !phone || !address) {
+        showToast('Por favor completa los campos requeridos');
+        return;
     }
     
-    message += `\n━━━━━━━━━━━━━━━━━━━━\n`;
-    message += `📦 *PRODUCTOS:*\n\n`;
-    
-    cart.forEach((item, idx) => {
-        message += `${idx + 1}. *${item.name}*\n`;
-        message += `   Tamaño: ${sizeLabels[item.size]}\n`;
-        message += `   Cantidad: ${item.quantity}\n`;
-        message += `   Precio: $${(item.price * item.quantity).toFixed(2)}\n`;
+    let message = `¡Hola! 🌿 Quisiera hacer un pedido:\n\n`;
+    message += `*PRODUCTOS:*\n`;
+    cart.forEach(item => {
+        message += `• ${item.name} (${sizeLabels[item.size]}) x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}\n`;
         if (item.isCustom && item.customDetails) {
-            message += `   ✨ Personalizado:\n`;
-            message += `      - Tipo: ${item.customDetails.productType}\n`;
-            message += `      - Forma: ${item.customDetails.shape}\n`;
-            message += `      - Color: ${item.customDetails.color}\n`;
-            message += `      - Aroma: ${item.customDetails.scent}\n`;
-            message += `      - Ingredientes: ${item.customDetails.ingredients.join(', ')}\n`;
+            const cd = item.customDetails;
+            message += `  _Personalizado: ${customizerOptions.shapes.find(s=>s.id===cd.shape)?.label || ''}, ${customizerOptions.colors.find(c=>c.id===cd.color)?.label || ''}_\n`;
         }
-        message += `\n`;
     });
+    message += `\n*TOTAL: $${getCartTotal().toFixed(2)}*\n\n`;
+    message += `*DATOS DE ENVÍO:*\n`;
+    message += `Nombre: ${name}\n`;
+    message += `Teléfono: ${phone}\n`;
+    message += `Dirección: ${address}, ${colonia}, CP ${cp}, ${city}\n`;
+    if (notes) message += `Notas: ${notes}\n`;
     
-    message += `━━━━━━━━━━━━━━━━━━━━\n`;
-    message += `💰 *TOTAL: $${getCartTotal().toFixed(2)}*\n`;
-    message += `(Envío a calcular)\n\n`;
-    message += `¡Gracias por tu interés! 🙏`;
-    
-    const order = {
-        id: 'order-' + Date.now(),
-        items: [...cart],
-        customer: {
-            name: form.name.value,
-            email: form.email.value,
-            phone: form.phone.value,
-            address: form.address.value,
-            city: form.city.value,
-            postalCode: form.postal_code.value,
-            notes: form.notes.value
-        },
-        total: getCartTotal(),
-        status: 'pending',
-        createdAt: new Date().toISOString()
-    };
-    orders.unshift(order);
+    const orderId = 'AUR-' + Date.now().toString(36).toUpperCase();
+    orders.push({ id: orderId, items: [...cart], total: getCartTotal(), customer: { name, phone, address: `${address}, ${colonia}, CP ${cp}, ${city}` }, date: new Date().toISOString(), status: 'pending' });
     saveOrders();
-    lastOrderId = order.id;
     
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     
     cart = [];
     saveCart();
-    navigate('orderComplete');
-    showToast('¡Cotización enviada por WhatsApp!');
+    currentPage = 'orderComplete';
+    render();
 }
 
 function renderOrderComplete() {
     return `
     <div class="order-complete">
         <div class="order-complete-content">
-            <div class="order-complete-icon" style="background:#25D366"><i class="fab fa-whatsapp"></i></div>
-            <h1>¡Cotización Enviada!</h1>
-            <p>Tu pedido ha sido enviado por WhatsApp.</p>
-            <p class="order-number">Número de pedido: <strong>${lastOrderId.slice(-8).toUpperCase()}</strong></p>
-            <p>Revisa tu WhatsApp para continuar la conversación y coordinar el pago.</p>
-            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
-                <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" class="btn btn-primary" style="background:#25D366">
-                    <i class="fab fa-whatsapp"></i> Abrir WhatsApp
-                </a>
-                <button class="btn btn-outline" onclick="navigate('home')">Seguir Comprando</button>
-            </div>
+            <div class="order-complete-icon"><i class="fas fa-check"></i></div>
+            <h1>¡Pedido Enviado!</h1>
+            <p>Tu pedido ha sido enviado por WhatsApp. Te contactaremos pronto para confirmar los detalles y el envío.</p>
+            <p class="order-number">Gracias por tu preferencia</p>
+            <button class="btn btn-primary" onclick="navigate('home')">VOLVER AL INICIO</button>
         </div>
     </div>`;
 }
 
-// Admin
+// ==========================================
+// ADMIN PANEL
+// ==========================================
 function renderAdmin() {
-    const stats = { totalProducts: products.length, totalOrders: orders.length, pendingOrders: orders.filter(o => o.status === 'pending').length, totalRevenue: orders.reduce((s, o) => s + o.total, 0) };
+    const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+    const totalOrders = orders.length;
+    const totalProducts = products.length;
     
-    let content = '';
+    let content = `
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo"><span>${STORE_NAME}</span><small>Panel de Administración</small></div>
+            <nav class="admin-nav">
+                <div class="${adminTab === 'dashboard' ? 'active' : ''}" onclick="setAdminTab('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</div>
+                <div class="${adminTab === 'orders' ? 'active' : ''}" onclick="setAdminTab('orders')"><i class="fas fa-shopping-bag"></i> Pedidos</div>
+                <div class="${adminTab === 'products' ? 'active' : ''}" onclick="setAdminTab('products')"><i class="fas fa-box"></i> Productos</div>
+            </nav>
+            <div class="admin-back" onclick="navigate('home')"><i class="fas fa-arrow-left"></i> Volver a la tienda</div>
+        </aside>
+        <main class="admin-main">`;
+    
     if (adminTab === 'dashboard') {
-        content = `
+        content += `
             <div class="admin-header"><h1>Dashboard</h1></div>
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">Productos</span><span class="stat-value">${stats.totalProducts}</span></div>
-                <div class="stat-card"><span class="stat-label">Pedidos Totales</span><span class="stat-value">${stats.totalOrders}</span></div>
-                <div class="stat-card"><span class="stat-label">Pedidos Pendientes</span><span class="stat-value">${stats.pendingOrders}</span></div>
-                <div class="stat-card"><span class="stat-label">Ingresos</span><span class="stat-value">$${stats.totalRevenue.toFixed(2)}</span></div>
-            </div>`;
-    } else if (adminTab === 'products') {
-        content = `
-            <div class="admin-header"><h1>Productos</h1></div>
+                <div class="stat-card"><span class="stat-label">Ingresos Totales</span><div class="stat-value">$${totalRevenue.toFixed(2)}</div></div>
+                <div class="stat-card"><span class="stat-label">Pedidos</span><div class="stat-value">${totalOrders}</div></div>
+                <div class="stat-card"><span class="stat-label">Productos</span><div class="stat-value">${totalProducts}</div></div>
+                <div class="stat-card"><span class="stat-label">Items en Carrito</span><div class="stat-value">${getCartCount()}</div></div>
+            </div>
+            <h2 style="margin:2rem 0 1rem;font-size:1.5rem">Últimos Pedidos</h2>
+            ${orders.length === 0 ? '<p style="color:var(--text-muted)">No hay pedidos aún.</p>' : `
             <div class="admin-table-container">
                 <table class="admin-table">
-                    <thead><tr><th>Producto</th><th>Categoría</th><th>Precios</th><th>Stock</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Cliente</th><th>Total</th><th>Fecha</th><th>Estado</th></tr></thead>
                     <tbody>
-                        ${products.map(p => `
+                        ${orders.slice(-5).reverse().map(o => `
                             <tr>
-                                <td><div class="product-cell"><img src="${p.image}" alt="${p.name}"><span>${p.name}${p.featured ? '<span class="featured-badge">Destacado</span>' : ''}</span></div></td>
-                                <td>${p.category === 'soap' ? 'Jabón' : 'Vela'}</td>
-                                <td>${p.category === 'soap' ? `$${p.price}` : `$${p.prices.small} / $${p.prices.medium} / $${p.prices.large}`}</td>
-                                <td>${p.category === 'soap' ? p.stock : (p.stock.small + p.stock.medium + p.stock.large)} uds</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>`;
-    } else if (adminTab === 'orders') {
-        const statusLabels = { pending: 'Pendiente', confirmed: 'Confirmado', shipped: 'Enviado', delivered: 'Entregado', cancelled: 'Cancelado' };
-        content = `
-            <div class="admin-header"><h1>Pedidos</h1></div>
-            ${orders.length === 0 ? '<div class="admin-table-container" style="padding:3rem;text-align:center"><p>No hay pedidos todavía</p></div>' : `
-            <div class="admin-table-container">
-                <table class="admin-table">
-                    <thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr></thead>
-                    <tbody>
-                        ${orders.map(o => `
-                            <tr>
-                                <td>#${o.id.slice(-8).toUpperCase()}</td>
-                                <td>${o.customer.name}<br><small style="color:var(--text-muted)">${o.customer.email}</small></td>
+                                <td>${o.id}</td>
+                                <td>${o.customer.name}</td>
                                 <td>$${o.total.toFixed(2)}</td>
-                                <td>
-                                    <select class="admin-select" onchange="updateOrderStatus('${o.id}', this.value)">
-                                        ${Object.entries(statusLabels).map(([k, v]) => `<option value="${k}" ${o.status === k ? 'selected' : ''}>${v}</option>`).join('')}
-                                    </select>
-                                </td>
-                                <td>${new Date(o.createdAt).toLocaleDateString('es-ES')}</td>
+                                <td>${new Date(o.date).toLocaleDateString()}</td>
+                                <td><span class="featured-badge">${o.status}</span></td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
             </div>`}`;
+    } else if (adminTab === 'orders') {
+        content += `
+            <div class="admin-header"><h1>Pedidos</h1></div>
+            ${orders.length === 0 ? '<p style="color:var(--text-muted)">No hay pedidos aún.</p>' : `
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead><tr><th>ID</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Fecha</th><th>Estado</th></tr></thead>
+                    <tbody>
+                        ${orders.map(o => `
+                            <tr>
+                                <td>${o.id}</td>
+                                <td>${o.customer.name}<br><small style="color:var(--text-muted)">${o.customer.phone}</small></td>
+                                <td>${o.items.length} item(s)</td>
+                                <td>$${o.total.toFixed(2)}</td>
+                                <td>${new Date(o.date).toLocaleDateString()}</td>
+                                <td>
+                                    <select class="admin-select" onchange="updateOrderStatus('${o.id}', this.value)">
+                                        <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                                        <option value="confirmed" ${o.status === 'confirmed' ? 'selected' : ''}>Confirmado</option>
+                                        <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Enviado</option>
+                                        <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>`}`;
+    } else if (adminTab === 'products') {
+        content += `
+            <div class="admin-header"><h1>Productos</h1></div>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Destacado</th></tr></thead>
+                    <tbody>
+                        ${products.map(p => {
+                            const cat = p.category === 'soap' ? 'Jabón' : (p.category === 'candle' ? 'Vela' : 'Temporada');
+                            const price = p.category === 'soap' || (p.category === 'season' && p.productType === 'soap') ? `$${p.price}` : `Desde $${p.prices.small.toFixed(2)}`;
+                            return `
+                            <tr>
+                                <td><div class="product-cell"><img src="${p.image}" alt="${p.name}"><span>${p.name}</span></div></td>
+                                <td>${cat}</td>
+                                <td>${price}</td>
+                                <td><button class="action-btn" onclick="toggleFeatured('${p.id}')"><i class="fas fa-star" style="color:${p.featured ? '#DAA520' : 'var(--text-muted)'}"></i></button></td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>`;
     }
     
-    return `
-    <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <div class="admin-logo"><span>Auralia</span><small>Panel Admin</small></div>
-            <nav class="admin-nav">
-                <div class="${adminTab === 'dashboard' ? 'active' : ''}" onclick="setAdminTab('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</div>
-                <div class="${adminTab === 'products' ? 'active' : ''}" onclick="setAdminTab('products')"><i class="fas fa-box"></i> Productos</div>
-                <div class="${adminTab === 'orders' ? 'active' : ''}" onclick="setAdminTab('orders')"><i class="fas fa-shopping-cart"></i> Pedidos</div>
-            </nav>
-            <div class="admin-back" onclick="navigate('home')"><i class="fas fa-arrow-left"></i> Volver a la tienda</div>
-        </aside>
-        <main class="admin-main">${content}</main>
-    </div>`;
+    content += `</main></div>`;
+    return content;
 }
 
 function setAdminTab(tab) { adminTab = tab; render(); }
-
 function updateOrderStatus(id, status) {
     const order = orders.find(o => o.id === id);
     if (order) { order.status = status; saveOrders(); showToast('Estado actualizado'); }
 }
+function toggleFeatured(id) {
+    const product = products.find(p => p.id === id);
+    if (product) { product.featured = !product.featured; localStorage.setItem('auralia_products', JSON.stringify(products)); render(); showToast(product.featured ? 'Producto destacado' : 'Producto no destacado'); }
+}
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    render();
-});
+render();
     </script>
 </body>
 </html>
