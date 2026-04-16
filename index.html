@@ -557,9 +557,9 @@ const customizerOptions = {
         { id: 'crystals', label: 'Cristales', benefit: 'Energía positiva' }
     ],
     candleSizes: [
-        { id: 'small', label: 'Pequeño', weight: '100g - 20hrs de duración', price: PRECIOS.vela.pequeno },
-        { id: 'medium', label: 'Mediano', weight: '200g - 40hrs de duración', price: PRECIOS.vela.mediano },
-        { id: 'large', label: 'Grande', weight: '350g - 60hrs de duración', price: PRECIOS.vela.grande }
+        { id: 'small', label: 'Pequeño', price: PRECIOS.vela.pequeno },
+        { id: 'medium', label: 'Mediano', price: PRECIOS.vela.mediano },
+        { id: 'large', label: 'Grande', price: PRECIOS.vela.grande }
     ]
 };
 
@@ -854,7 +854,7 @@ function renderCatalog(category) {
     } else if (category === 'candle') {
         info = { title: 'Velas Aromáticas', subtitle: 'Aromas que transforman espacios', desc: 'Velas con fragancias naturales para momentos únicos.', img: 'https://images.pexels.com/photos/7234629/pexels-photo-7234629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' };
     } else if (category === 'season') {
-        info = { title: 'Colección Temporada', subtitle: 'Ediciones especiales y limitadas', desc: 'Jabones y velas artesanales para cada celebración y estación del año.', img: TEMPORADA_IMAGES.jabones_celebraciones };
+        info = { title: 'Colección Temporada', subtitle: 'Ediciones especiales y limitadas', desc: 'Jabones y velas artesanales para cada celebración y estación del año.', img: '#' };
     }
     
     return `
@@ -952,7 +952,7 @@ function renderProductDetail() {
                     <div class="add-to-cart-section">
                         <div class="total-price">
                             <span>Total</span>
-                            <span id="productTotal">$${initialPrice}${isSoap ? '' : '.00'}</span>
+                            <span id="productTotal">$${initialPrice}${isSoap ? '' : ''}</span>
                         </div>
                         <button class="btn btn-primary" onclick="addCurrentProduct()"><i class="fas fa-shopping-bag"></i> AÑADIR AL CARRITO</button>
                     </div>
