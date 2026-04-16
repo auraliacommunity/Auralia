@@ -567,7 +567,12 @@ const customizerOptions = {
 };
 
 // State
-let products = JSON.parse(localStorage.getItem('auralia_products')) || initialProducts;
+let products = JSON.parse(localStorage.getItem('auralia_products'));
+
+if (!products || !Array.isArray(products) || products.length === 0) {
+    products = initialProducts;
+    localStorage.setItem('auralia_products', JSON.stringify(products));
+}
 let cart = JSON.parse(localStorage.getItem('auralia_cart')) || [];
 let orders = JSON.parse(localStorage.getItem('auralia_orders')) || [];
 let currentPage = 'home';
